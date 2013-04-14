@@ -7,6 +7,7 @@ clock = pygame.time.Clock()
 # Libraries
 from levelGenerator import Levels
 from playerShip import GoodShip, GoodBullet
+from droneShip import DroneShip
 
 class Game(object):
     """ Nemesis Game """
@@ -40,23 +41,17 @@ class Game(object):
         vmove = 0
         
         while self.Playing:
-            time = clock.tick(50)
+            time = clock.tick(60)
             self.Step += 1
+            
+            if self.Step % 100 == 0:
+                self.BadGuys.add(DroneShip((640,240)))
             
             self.PlayerGroup.update()
             self.GoodBullets.update()
+            self.BadGuys.update()
             
-            self.Surface.fill((0, 0, 0))
-            
-            # Draw Level
-            self.Level.Draw(self.Step, self.Surface)
-            
-            # Draw Player
-            self.PlayerGroup.draw(self.Surface)
-            self.GoodBullets.draw(self.Surface)
-            
-            # Misc
-            self.DrawScore()
+            self.Draw()
             
             # Handle Events
             for event in pygame.event.get():
@@ -104,7 +99,23 @@ class Game(object):
     def AddGoodBullet(self):
         newbullet = GoodBullet(self.GoodGuy.rect.midright)
         self.GoodBullets.add(newbullet)
+        
     def DrawScore(self):
-        scoretext = self.Font.render("Score : " + str(self.Score) + "   Level : " + str(self.LevelID), 1,(5,225,5))
+        scoretext = self.Font.render("Score : " + str(self.Score) + "   Level : " + str(self.LevelID + 1), 1,(5,225,5))
         self.Surface.blit(scoretext, (400, 457))
-
+        scoretext = self.Font.render("Step : " + str(self.Step), 1,(5,225,5))
+        self.Surface.blit(scoretext, (20, 457))
+        
+    def Draw(self):
+        self.Surface.fill((0, 0, 0))
+        
+        # Draw Level
+        self.Level.Draw(self.Step, self.Surface)
+        
+        # Draw SpriteGroups
+        self.PlayerGroup.draw(self.Surface)
+        self.GoodBullets.draw(self.Surface)
+        self.BadGuys.draw(self.Surface)
+        
+        # Misc
+        self.DrawScore()

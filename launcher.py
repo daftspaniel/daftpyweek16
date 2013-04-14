@@ -12,12 +12,13 @@ from gameCore import Game
 # Init
 pygame.font.init()
 pygame.display.init()
+pygame.mixer.init()
 
-screen = sgc.surface.Screen((800,600))
+screen = sgc.surface.Screen((640, 480))
 clock = pygame.time.Clock()
 
 def main():
-    
+    pygame.mixer.Sound("zap.wav").play()
     menu = MenuScreen()
     game = Game(screen.image)
     

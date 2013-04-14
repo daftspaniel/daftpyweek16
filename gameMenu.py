@@ -28,6 +28,10 @@ class MenuScreen(object):
             time = self.clock.tick(30)
             for event in pygame.event.get():
                 sgc.event(event)
+                if event.type == pygame.KEYDOWN:
+                    keystate = pygame.key.get_pressed()
+                    if keystate[K_j]==1:
+                        self.startgame()
                 if event.type == GUI:
                     pass
                 elif event.type == QUIT:

@@ -5,19 +5,34 @@ import random
 clock = pygame.time.Clock()
 
 # Libraries
-#from levels import *
-from playerShip import GoodShip
+from levelGenerator import Levels
+from playerShip import GoodShip, GoodBullet
 
 class Game(object):
     """ Nemesis Game """
     def __init__(self, surface):
+        
         self.Surface = surface
         self.Playing = True
+        self.Font = pygame.font.Font(None,30)
         
         # Player
         self.GoodGuy = GoodShip(self, (0,300))
         self.PlayerGroup = pygame.sprite.GroupSingle(self.GoodGuy)
-        self.GoodBullets = []
+        self.GoodBullets = pygame.sprite.Group()
+        self.Score = 0
+        
+        # Bad Guys
+        self.BadGuys = pygame.sprite.Group()
+        self.BadBullets = pygame.sprite.Group()
+        
+        # Levels
+        self.Level = Levels(0)
+        self.SetLevel(0)
+        
+    def SetLevel(self, level):
+        self.Step = 0
+        self.LevelID = level
         
     def Run(self):
         
@@ -26,26 +41,31 @@ class Game(object):
         
         while self.Playing:
             time = clock.tick(50)
+            self.Step += 1
             
             self.PlayerGroup.update()
+            self.GoodBullets.update()
             
             self.Surface.fill((0, 0, 0))
             
             # Draw Level
-            pygame.draw.rect(self.Surface, pygame.Color("yellow"), Rect(0, 450, 640,480), 0)
+            self.Level.Draw(self.Step, self.Surface)
             
             # Draw Player
             self.PlayerGroup.draw(self.Surface)
+            self.GoodBullets.draw(self.Surface)
+            
+            # Misc
+            self.DrawScore()
             
             # Handle Events
             for event in pygame.event.get():
                 if event.type == QUIT:
                     exit()
                 elif event.type == KEYDOWN:
-                    print "keydown"
+                    
                     if event.key == K_q:
                         self.Playing = False
-                        print "quit already!"
                         return
                     
                     keystate = pygame.key.get_pressed()
@@ -59,18 +79,32 @@ class Game(object):
                         vmove = -1
                     elif keystate[K_s]==1:
                         vmove = 1
+                    if keystate[K_j]==1:
+                        self.GoodGuy.fire = 1
                         
                 elif event.type == pygame.KEYUP:
                     keystate = pygame.key.get_pressed()
 
-                    if keystate[K_a]==0:
+                    if keystate[K_a]==0 and hmove<0:
                         hmove = 0
-                    if keystate[K_d]==0:
+                    if keystate[K_d]==0 and hmove>0:
                         hmove = 0
                     if keystate[K_w]==0:
                         vmove = 0
+                    if keystate[K_j]==0:
+                        self.GoodGuy.fire = 0
             self.GoodGuy.hmove = hmove
             self.GoodGuy.vmove = vmove
-            print hmove, vmove
+            
+            if self.GoodGuy.fire and self.GoodGuy.fired and len(self.GoodBullets)<10 :
+                self.AddGoodBullet()
             # Refresh Display
             pygame.display.flip()
+            
+    def AddGoodBullet(self):
+        newbullet = GoodBullet(self.GoodGuy.rect.midright)
+        self.GoodBullets.add(newbullet)
+    def DrawScore(self):
+        scoretext = self.Font.render("Score : " + str(self.Score) + "   Level : " + str(self.LevelID), 1,(5,225,5))
+        self.Surface.blit(scoretext, (400, 457))
+

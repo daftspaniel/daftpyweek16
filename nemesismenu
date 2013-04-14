@@ -1,0 +1,5 @@
+["m:Nemesis",
+    ["f:Start Game","start"],
+    ["m:Instructions",["w:Label", {"text": "Use WASD to move.\nK to fire."}]],
+    ["f:Quit", "exit"]
+]

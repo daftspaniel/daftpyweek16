@@ -308,6 +308,8 @@ class Font():
         for OpenGL or Pygame.
 
         """
+        font = "Geo-Regular.ttf"
+        size = 20
         if font[-4:] in (".ttf", ".otf"):
             return pygame.font.Font(font, size)
         else:

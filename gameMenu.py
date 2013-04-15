@@ -16,7 +16,7 @@ class MenuScreen(object):
                                "exit": self.exitgame}
         self.menu = sgc.Menu(menu=open("nemesismenu"))
         self.menu.add()
-        
+        #sgc.Font["widget"] = pygame.font.Font("Geo-Regular.ttf",30)
         self.clock = pygame.time.Clock()
         
     def startgame(self):

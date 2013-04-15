@@ -17,6 +17,9 @@ class DroneShip(pygame.sprite.Sprite):
         self.rect.top = pos[1]
         self.rect.left = pos[0]
         
+        self.ScoreValue = 10
+        self.Damage = 20
+        
     def update(self):
         self.rect.left += self.hmove
         self.shipswap += 1

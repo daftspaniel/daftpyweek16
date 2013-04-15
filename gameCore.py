@@ -1,4 +1,5 @@
 import pygame
+import pygame.sprite
 from pygame.locals import *
 
 import random
@@ -8,6 +9,7 @@ clock = pygame.time.Clock()
 from levelGenerator import Levels
 from playerShip import GoodShip, GoodBullet
 from droneShip import DroneShip
+from animExplosion import Explosion
 
 class Game(object):
     """ Nemesis Game """
@@ -15,7 +17,7 @@ class Game(object):
         
         self.Surface = surface
         self.Playing = True
-        self.Font = pygame.font.Font(None,30)
+        self.Font = pygame.font.Font("Geo-Regular.ttf",30)
         
         # Player
         self.GoodGuy = GoodShip(self, (0,300))
@@ -27,6 +29,9 @@ class Game(object):
         self.BadGuys = pygame.sprite.Group()
         self.BadBullets = pygame.sprite.Group()
         
+        # Items
+        self.Explosions = []
+        
         # Levels
         self.Level = Levels(0)
         self.SetLevel(0)
@@ -35,23 +40,25 @@ class Game(object):
         self.Step = 0
         self.LevelID = level
         
+    def ProgressLevel(self):
+        if self.Step % 100 == 0:
+            self.BadGuys.add(DroneShip((640,240)))
+
     def Run(self):
         
         hmove = 0
         vmove = 0
         
         while self.Playing:
+            
             time = clock.tick(60)
+            
             self.Step += 1
-            
-            if self.Step % 100 == 0:
-                self.BadGuys.add(DroneShip((640,240)))
-            
-            self.PlayerGroup.update()
-            self.GoodBullets.update()
-            self.BadGuys.update()
-            
+            self.ProgressLevel()
+            self.UpdateAll()
             self.Draw()
+            
+            self.DetectCollisions()
             
             # Handle Events
             for event in pygame.event.get():
@@ -88,11 +95,13 @@ class Game(object):
                         vmove = 0
                     if keystate[K_j]==0:
                         self.GoodGuy.fire = 0
+                        
             self.GoodGuy.hmove = hmove
             self.GoodGuy.vmove = vmove
             
             if self.GoodGuy.fire and self.GoodGuy.fired and len(self.GoodBullets)<10 :
                 self.AddGoodBullet()
+                
             # Refresh Display
             pygame.display.flip()
             
@@ -102,9 +111,9 @@ class Game(object):
         
     def DrawScore(self):
         scoretext = self.Font.render("Score : " + str(self.Score) + "   Level : " + str(self.LevelID + 1), 1,(5,225,5))
-        self.Surface.blit(scoretext, (400, 457))
+        self.Surface.blit(scoretext, (400, 447))
         scoretext = self.Font.render("Step : " + str(self.Step), 1,(5,225,5))
-        self.Surface.blit(scoretext, (20, 457))
+        self.Surface.blit(scoretext, (20, 447))
         
     def Draw(self):
         self.Surface.fill((0, 0, 0))
@@ -117,5 +126,30 @@ class Game(object):
         self.GoodBullets.draw(self.Surface)
         self.BadGuys.draw(self.Surface)
         
+        for e in self.Explosions:
+            e.Draw(self.Surface)
+        
+        self.Explosions = [e for e in self.Explosions if e.Alive]
+        
         # Misc
         self.DrawScore()
+            
+    def UpdateAll(self):
+        self.PlayerGroup.update()
+        self.GoodBullets.update()
+        self.BadGuys.update()
+        for e in self.Explosions:
+            e.Update()
+            
+    def DetectCollisions(self):
+        
+        contacts = pygame.sprite.groupcollide(self.BadGuys, self.GoodBullets, False, False)
+        
+        # Good Bullets
+        for badguy in contacts.keys():
+            
+            self.Explosions.append(Explosion(badguy.rect.midleft, badguy.rect.w))
+            badguy.kill()
+            
+            for bullet in contacts[badguy]:
+                if bullet: bullet.kill()

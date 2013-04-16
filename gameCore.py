@@ -9,6 +9,7 @@ clock = pygame.time.Clock()
 from levelGenerator import Levels
 from playerShip import GoodShip, GoodBullet
 from droneShip import DroneShip
+from droneWing import DroneWing, BadBullet
 from animExplosion import Explosion
 
 class Game(object):
@@ -48,8 +49,10 @@ class Game(object):
         if self.Step % 100 == 0:
             self.BadGuys.add(DroneShip((640,240)))
             self.BadGuys.add(DroneShip((640,140)))
-            self.BadGuys.add(DroneShip((640,340)))
-
+            self.BadGuys.add(DroneWing((640,340)))
+            
+            self.AddBadBullet((540,340))
+            
     def Run(self):
         
         hmove = 0
@@ -113,6 +116,10 @@ class Game(object):
             
             if self.Health<0: self.Playing = False
             
+    def AddBadBullet(self, pos):
+        b = BadBullet(pos)
+        self.BadBullets.add(b)
+        
     def AddGoodBullet(self):
         newbullet = GoodBullet(self.GoodGuy.rect.midright)
         self.GoodBullets.add(newbullet)
@@ -150,7 +157,7 @@ class Game(object):
         self.PlayerGroup.draw(self.Surface)
         self.GoodBullets.draw(self.Surface)
         self.BadGuys.draw(self.Surface)
-        
+        self.BadBullets.draw(self.Surface)
         for e in self.Explosions:
             e.Draw(self.Surface)
         
@@ -162,6 +169,7 @@ class Game(object):
     def UpdateAll(self):
         self.PlayerGroup.update()
         self.GoodBullets.update()
+        self.BadBullets.update()
         self.BadGuys.update()
         for e in self.Explosions:
             e.Update()

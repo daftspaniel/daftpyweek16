@@ -20,10 +20,10 @@ clock = pygame.time.Clock()
 def main():
     
     menu = MenuScreen()
-    game = Game(screen.image)
     
     while True:
         while menu.Active:
+            game = Game(screen.image)
             menu.Run()
             game.Playing = True
         while game.Playing:

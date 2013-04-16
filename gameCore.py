@@ -2,15 +2,22 @@ import pygame
 import pygame.sprite
 from pygame.locals import *
 
+# Libraries
+import os
 import random
 clock = pygame.time.Clock()
 
-# Libraries
+# Daft
 from levelGenerator import Levels
 from playerShip import GoodShip, GoodBullet
 from droneShip import DroneShip
 from droneWing import DroneWing, BadBullet
 from animExplosion import Explosion
+from niceThings import ShieldBoost
+
+
+def LoadImg(filename):
+    return pygame.image.load(os.path.join("img", filename))
 
 class Game(object):
     """ Nemesis Game """
@@ -33,6 +40,7 @@ class Game(object):
         
         # Items
         self.Explosions = []
+        self.Bonuses = pygame.sprite.Group()
         
         # Levels
         self.Level = Levels(0)
@@ -40,6 +48,18 @@ class Game(object):
         
         # Sound
         self.ExpSound = pygame.mixer.Sound("exp.wav")
+        self.BonusSound = pygame.mixer.Sound("bonus.wav")
+        
+        self.LoadGFX()
+        
+    def LoadGFX(self):
+        self.ShieldBoostImgs = [LoadImg("shieldb0.png"),
+                                LoadImg("shieldb1.png"),
+                                LoadImg("shieldb2.png"),
+                                LoadImg("shieldb3.png"),
+                                LoadImg("shieldb3.png"),
+                                LoadImg("shieldb2.png"),
+                                LoadImg("shieldb1.png")]
         
     def SetLevel(self, level):
         self.Step = 0
@@ -47,9 +67,11 @@ class Game(object):
         
     def ProgressLevel(self):
         if self.Step % 100 == 0:
-            self.BadGuys.add(DroneShip((640,240)))
-            self.BadGuys.add(DroneShip((640,140)))
-            self.BadGuys.add(DroneWing((640,340)))
+            self.BadGuys.add( DroneShip((640,240)) )
+            self.BadGuys.add( DroneShip((640,140)) )
+            self.BadGuys.add( DroneWing((640,340)) )
+            
+            self.Bonuses.add( ShieldBoost((640,90), self.ShieldBoostImgs) )
             
             self.AddBadBullet((540,340))
             
@@ -155,12 +177,15 @@ class Game(object):
         
         # Draw SpriteGroups
         self.PlayerGroup.draw(self.Surface)
-        self.GoodBullets.draw(self.Surface)
+        self.Bonuses.draw(self.Surface)
         self.BadGuys.draw(self.Surface)
-        self.BadBullets.draw(self.Surface)
+        
         for e in self.Explosions:
             e.Draw(self.Surface)
+        self.GoodBullets.draw(self.Surface)
+        self.BadBullets.draw(self.Surface)
         
+        # Tidy up explosions
         self.Explosions = [e for e in self.Explosions if e.Alive]
         
         # Misc
@@ -171,14 +196,15 @@ class Game(object):
         self.GoodBullets.update()
         self.BadBullets.update()
         self.BadGuys.update()
+        self.Bonuses.update()
         for e in self.Explosions:
             e.Update()
             
     def DetectCollisions(self):
         
+        # Good Bullets
         contacts = pygame.sprite.groupcollide(self.BadGuys, self.GoodBullets, False, False)
         
-        # Good Bullets
         for badguy in contacts.keys():
             
             self.Explosions.append(Explosion(badguy.rect.midleft, badguy.rect.w))
@@ -189,10 +215,19 @@ class Game(object):
                 if bullet: bullet.kill()
         
         # Player Bad Guy collision
-        contacts = pygame.sprite.spritecollide(self.GoodGuy,self.BadGuys, False)
+        contacts = pygame.sprite.spritecollide(self.GoodGuy, self.BadGuys, False)
         
         for badguy in contacts:
             self.Explosions.append(Explosion(badguy.rect.midleft, badguy.rect.w))
             badguy.kill()
             self.ExpSound.play()
             self.Health -= badguy.Damage
+
+        # Player Bonus Collect
+        contacts = pygame.sprite.spritecollide(self.GoodGuy, self.Bonuses, False)
+        
+        for bonus in contacts:
+            bonus.kill()
+            self.BonusSound.play()
+            self.Health += bonus.Health
+            if self.Health>100: self.Health = 100

@@ -12,6 +12,7 @@ from levelGenerator import Levels
 from playerShip import GoodShip, GoodBullet
 from droneShip import DroneShip
 from droneWing import DroneWing, BadBullet
+from droneTower import DroneTower
 from animExplosion import Explosion
 from niceThings import ShieldBoost
 
@@ -68,6 +69,7 @@ class Game(object):
         
         self.BadBulletImgs = [LoadImg("badbullet.png")]
         self.GoodBulletImgs = [LoadImg("bullet.png")]
+        self.TowerImgs = [LoadImg("tower0.png"), LoadImg("tower1.png"), LoadImg("tower2.png") ]
         
     def SetLevel(self, level):
         self.Step = 0
@@ -82,9 +84,10 @@ class Game(object):
             self.BadGuys.add( DroneWing((640,340), self.DroneWingImgs) )
             self.AddBadBullet((540,340))
             
-        if self.Step % 100 == 0  and self.Step>300  and self.Step<600:
-            self.BadGuys.add( DroneWing((640,340), self.DroneWingImgs) )
-            self.AddBadBullet((540,340))
+        if self.Step % 100 == 0  and self.Step>600  and self.Step<800:
+            dt = DroneTower((640,344), self.TowerImgs)
+            self.BadGuys.add( dt )
+            dt.gameCore = self
     
     def Run(self):
         

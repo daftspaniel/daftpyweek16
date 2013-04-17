@@ -8,6 +8,7 @@ class DroneShip(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.shipimgs = imgs
         self.hmove = -4
+        self.vmove = 0
         self.image = self.shipimgs[0]
         self.shipswap = 0
         
@@ -20,6 +21,7 @@ class DroneShip(pygame.sprite.Sprite):
         
     def update(self):
         self.rect.left += self.hmove
+        self.rect.top += self.vmove
         self.shipswap += 1
         if self.rect.left<0: self.kill()
         if self.shipswap==7:

@@ -58,11 +58,10 @@ class GoodShip(pygame.sprite.Sprite):
         
 class GoodBullet(pygame.sprite.Sprite):
     
-    def __init__(self, pos = (0,0) ):
+    def __init__(self, pos = (0,0), img =[] ):
         pygame.sprite.Sprite.__init__(self)
         
-        self.shipimg = pygame.image.load("img/bullet.png")
-        self.image = self.shipimg
+        self.image = img[0]
         
         self.rect = self.image.get_rect()
         self.rect.top = pos[1]

@@ -49,6 +49,7 @@ class Game(object):
         # Sound
         self.ExpSound = pygame.mixer.Sound("exp.wav")
         self.BonusSound = pygame.mixer.Sound("bonus.wav")
+        self.HurtSound = pygame.mixer.Sound("hurt.wav")
         
         self.LoadGFX()
         
@@ -60,21 +61,31 @@ class Game(object):
                                 LoadImg("shieldb3.png"),
                                 LoadImg("shieldb2.png"),
                                 LoadImg("shieldb1.png")]
+        self.DroneShipImgs = [LoadImg("drone1.png"),
+                         LoadImg("drone2.png"),
+                         LoadImg("drone3.png")]
+        self.DroneWingImgs = [LoadImg("shortwing1.png")]
+        
+        self.BadBulletImgs = [LoadImg("badbullet.png")]
+        self.GoodBulletImgs = [LoadImg("bullet.png")]
         
     def SetLevel(self, level):
         self.Step = 0
         self.LevelID = level
         
     def ProgressLevel(self):
-        if self.Step % 100 == 0:
-            self.BadGuys.add( DroneShip((640,240)) )
-            self.BadGuys.add( DroneShip((640,140)) )
-            self.BadGuys.add( DroneWing((640,340)) )
+        if self.Step % 100 == 0  and self.Step<300:
+            self.BadGuys.add( DroneShip((640,240), self.DroneShipImgs) )
+            self.BadGuys.add( DroneShip((640,140), self.DroneShipImgs) )
             
-            self.Bonuses.add( ShieldBoost((640,90), self.ShieldBoostImgs) )
-            
+        if self.Step % 100 == 0  and self.Step>300  and self.Step<600:
+            self.BadGuys.add( DroneWing((640,340), self.DroneWingImgs) )
             self.AddBadBullet((540,340))
             
+        if self.Step % 100 == 0  and self.Step>300  and self.Step<600:
+            self.BadGuys.add( DroneWing((640,340), self.DroneWingImgs) )
+            self.AddBadBullet((540,340))
+    
     def Run(self):
         
         hmove = 0
@@ -139,11 +150,12 @@ class Game(object):
             if self.Health<0: self.Playing = False
             
     def AddBadBullet(self, pos):
-        b = BadBullet(pos)
+        b = BadBullet(pos, self.BadBulletImgs)
         self.BadBullets.add(b)
+        return b
         
     def AddGoodBullet(self):
-        newbullet = GoodBullet(self.GoodGuy.rect.midright)
+        newbullet = GoodBullet(self.GoodGuy.rect.midright, self.GoodBulletImgs)
         self.GoodBullets.add(newbullet)
         
     def DrawScore(self):
@@ -211,8 +223,22 @@ class Game(object):
             badguy.kill()
             self.ExpSound.play()
             self.Score += badguy.ScoreValue
+            
+            if random.randrange(0,10) == 10:
+                sb = ShieldBoost(badguy.rect.center, self.ShieldBoostImgs)
+                self.Bonuses.add(sb)
+
+            
             for bullet in contacts[badguy]:
                 if bullet: bullet.kill()
+        
+        # Bad Bullets
+        contacts = pygame.sprite.spritecollide(self.GoodGuy, self.BadBullets, False)
+        
+        for badbullet in contacts:
+            badbullet.kill()
+            self.HurtSound.play()
+            self.Health -= 10
         
         # Player Bad Guy collision
         contacts = pygame.sprite.spritecollide(self.GoodGuy, self.BadGuys, False)

@@ -2,12 +2,12 @@ import pygame
 from pygame.locals import *
 import random
 
-class DroneShip(pygame.sprite.Sprite):
+class DroneTower(pygame.sprite.Sprite):
     
     def __init__(self, pos = (0,0), imgs = [] ):
         pygame.sprite.Sprite.__init__(self)
         self.shipimgs = imgs
-        self.hmove = -4
+        self.hmove = -1
         self.image = self.shipimgs[0]
         self.shipswap = 0
         
@@ -15,8 +15,8 @@ class DroneShip(pygame.sprite.Sprite):
         self.rect.top = pos[1]
         self.rect.left = pos[0]
         
-        self.ScoreValue = 10
-        self.Damage = 20
+        self.ScoreValue = 40
+        self.Damage = 40
         
     def update(self):
         self.rect.left += self.hmove

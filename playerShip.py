@@ -72,4 +72,5 @@ class GoodBullet(pygame.sprite.Sprite):
                 
     def update(self):
         self.rect.left += self.hmove
+        self.rect.top += self.vmove
         if self.rect.left>640: self.kill()

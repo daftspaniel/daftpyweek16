@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 import random
 
-class DroneShip(pygame.sprite.Sprite):
+class DroneCrate(pygame.sprite.Sprite):
     
     def __init__(self, pos = (0,0), imgs = [] ):
         pygame.sprite.Sprite.__init__(self)

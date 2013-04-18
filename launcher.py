@@ -13,8 +13,7 @@ from gameCore import Game
 pygame.font.init()
 pygame.display.init()
 pygame.mixer.init()
-
-screen = sgc.surface.Screen((640, 480))
+screen = sgc.surface.Screen((640, 480), DOUBLEBUF)
 clock = pygame.time.Clock()
 
 def main():

@@ -13,6 +13,7 @@ from playerShip import GoodShip, GoodBullet
 from droneShip import DroneShip
 from droneWing import DroneWing, BadBullet
 from droneTower import DroneTower
+from droneSnakehead import DroneSnakeHead
 from animExplosion import Explosion
 from niceThings import ShieldBoost
 
@@ -71,20 +72,38 @@ class Game(object):
         self.GoodBulletImgs = [LoadImg("bullet.png")]
         self.TowerImgs = [LoadImg("tower0.png"), LoadImg("tower1.png"), LoadImg("tower2.png") ]
         
+        self.SnakeheadImgs = [LoadImg("snake0.png")]
+        
     def SetLevel(self, level):
         self.Step = 0
         self.LevelID = level
         
     def ProgressLevel(self):
+        """
+            Keep things changing.
+        """
         if self.Step % 100 == 0  and self.Step<300:
             self.BadGuys.add( DroneShip((640,240), self.DroneShipImgs) )
             self.BadGuys.add( DroneShip((640,140), self.DroneShipImgs) )
             
-        if self.Step % 100 == 0  and self.Step>300  and self.Step<600:
-            self.BadGuys.add( DroneWing((640,340), self.DroneWingImgs) )
-            self.AddBadBullet((540,340))
+        elif self.Step>300  and self.Step<900  and self.Step % 100 == 0:
             
-        if self.Step % 100 == 0  and self.Step>600  and self.Step<800:
+            dw = DroneWing((640,40), self.DroneWingImgs)
+            self.BadGuys.add( dw )
+            dw.gameCore = self
+            dw.targetvert = self.GoodGuy.rect.midright[0]
+            
+            dw = DroneWing((640,400), self.DroneWingImgs)
+            self.BadGuys.add( dw )
+            dw.targetvert = self.GoodGuy.rect.midright[0]
+            dw.gameCore = self
+            
+        elif self.Step>900  and self.Step<1200  and self.Step % 70 == 0:
+            sh = DroneSnakeHead((640,40), self.SnakeheadImgs)
+            self.BadGuys.add(sh)
+            sh.gameCore = self
+            
+        elif self.Step>1200  and self.Step<1800  and self.Step % 40 == 0:
             dt = DroneTower((640,344), self.TowerImgs)
             self.BadGuys.add( dt )
             dt.gameCore = self
@@ -185,7 +204,7 @@ class Game(object):
         pygame.draw.rect(self.Surface, Color(255,255,255), Rect(x,y,200,20) , 1)
         
     def Draw(self):
-        self.Surface.fill((0, 0, 0))
+        #self.Surface.fill((0, 0, 0))
         
         # Draw Level
         self.Level.Draw(self.Step, self.Surface)
@@ -222,16 +241,18 @@ class Game(object):
         
         for badguy in contacts.keys():
             
-            self.Explosions.append(Explosion(badguy.rect.midleft, badguy.rect.w))
-            badguy.kill()
-            self.ExpSound.play()
-            self.Score += badguy.ScoreValue
+            badguy.HitsToDie -= 1
             
-            if random.randrange(0,10) == 10:
-                sb = ShieldBoost(badguy.rect.center, self.ShieldBoostImgs)
-                self.Bonuses.add(sb)
+            if badguy.HitsToDie < 1:
+                self.Explosions.append(Explosion(badguy.rect.midleft, badguy.rect.w))
+                badguy.kill()
+                self.ExpSound.play()
+                self.Score += badguy.ScoreValue
+                
+                if random.randrange(0,5) == 3:
+                    sb = ShieldBoost(badguy.rect.center, self.ShieldBoostImgs)
+                    self.Bonuses.add(sb)
 
-            
             for bullet in contacts[badguy]:
                 if bullet: bullet.kill()
         

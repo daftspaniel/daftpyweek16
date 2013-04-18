@@ -6,9 +6,9 @@ class GoodShip(pygame.sprite.Sprite):
     def __init__(self, game, pos = (0,0) ):
         pygame.sprite.Sprite.__init__(self)
         
-        self.shipimg = pygame.image.load("img/newplayer.png")
-        self.shipimgtiltup = pygame.image.load("img/ship2.png")
-        self.shipimgtiltdown = pygame.image.load("img/ship3.png")
+        self.shipimg = pygame.image.load("img/newplayer0.png")
+        self.shipimgtiltup = pygame.image.load("img/newplayer1.png")
+        self.shipimgtiltdown = pygame.image.load("img/newplayer2.png")
         self.image = self.shipimg
         
         self.rect = self.image.get_rect()

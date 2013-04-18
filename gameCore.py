@@ -10,8 +10,7 @@ clock = pygame.time.Clock()
 # Daft
 from levelGenerator import Levels
 from playerShip import GoodShip, GoodBullet
-from droneShip import DroneShip
-from droneCrate import DroneCrate
+
 from droneWing import DroneWing, BadBullet
 from droneTower import DroneTower
 from droneSnakehead import DroneSnakeHead
@@ -48,6 +47,7 @@ class Game(object):
         # Levels
         self.Level = Levels(0)
         self.SetLevel(0)
+        self.Level.GameCore = self
         
         # Sound
         self.ExpSound = pygame.mixer.Sound("exp.wav")
@@ -88,9 +88,10 @@ class Game(object):
             self.BadGuys.add( DroneShip((640,240), self.DroneShipImgs) )
             self.BadGuys.add( DroneShip((640,140), self.DroneShipImgs) )
             
-            self.BadGuys.add( DroneCrate((640,392), self.DroneCrateImgs) )
-            self.BadGuys.add( DroneCrate((640,360), self.DroneCrateImgs) )
-            self.BadGuys.add( DroneCrate((640,328), self.DroneCrateImgs) )
+            for xx in range(1,4):
+                for x in range(1,4):
+                    self.BadGuys.add( DroneCrate((640+(xx*64), 384 - (32*x) ), self.DroneCrateImgs) )
+                    #self.BadGuys.add( DroneCrate((640+(xx*64), 32 + (32*x)), self.DroneCrateImgs) )
             
         #elif self.Step>300  and self.Step<900  and self.Step % 100 == 0:
             
@@ -124,7 +125,7 @@ class Game(object):
             time = clock.tick(60)
             
             self.Step += 1
-            self.ProgressLevel()
+            self.Level.Progress()
             self.UpdateAll()
             self.Draw()
             
@@ -187,13 +188,14 @@ class Game(object):
         self.GoodBullets.add(newbullet)
         
     def DrawScore(self):
+        
         fc = (5,225,5)
         scoretext = self.Font.render("Level : " + str(self.LevelID + 1) + " Score : " + str(self.Score), 1,fc)
         self.Surface.blit(scoretext, (340, 447))
         scoretext = self.Font.render("Step : " + str(self.Step), 1, fc)
         self.Surface.blit(scoretext, (20, 370))
         
-        scoretext = self.Font.render("Shields : ", 1, fc)
+        scoretext = self.Font.render("Shields ", 1, fc)
         self.Surface.blit(scoretext, (20, 455))
         
         x = 130

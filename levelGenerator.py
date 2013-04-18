@@ -1,6 +1,9 @@
 import pygame
 from pygame.locals import *
 
+from droneShip import DroneShip
+from droneCrate import DroneCrate
+
 from starField import starField
 
 class Levels(object):
@@ -14,12 +17,48 @@ class Levels(object):
         self.rendback = None
         self.ActiveBorder = 1
         self.SideScroll = True
+        self.GameCore = None
         
     def Prepare(self, levelID):
         pass
-    
-    def Draw(self, step, surface):
         
+    def Progress(self):
+        """
+            Add Objects as the player progresses.
+        """
+        
+        gc = self.GameCore
+        
+        hund = gc.Step % 100 == 0 # 100th step
+        
+        if not hund: return
+        
+        if gc.Step==100:
+            
+            self.add_DroneShip( (640,240) )
+            self.add_DroneShip( (640,180) )
+            
+            for x in range(0,4):
+                self.add_Crate( (640, 384 - (32*x)) )
+                self.add_Crate( (640, 32 - (32*x)) )
+            for x in range(10):
+                self.add_Crate( (704 + (32*x), 160) )
+                self.add_Crate( (704 + (384*x), 160) )
+
+    def add_DroneShip(self, pos):
+        ds = DroneShip(pos, self.GameCore.DroneShipImgs)
+        self.GameCore.BadGuys.add( ds )
+        return ds
+        
+    def add_Crate(self, pos):
+        ds =  DroneCrate(pos, self.GameCore.DroneCrateImgs)
+        self.GameCore.BadGuys.add( ds )
+        return ds
+        
+    def Draw(self, step, surface):
+        """
+            Draw Level - star field and borders
+        """
         if step>1000:
             self.ActiveBorder = 0
             self.rendback = None

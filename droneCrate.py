@@ -18,10 +18,10 @@ class DroneCrate(pygame.sprite.Sprite):
         self.rect.left = pos[0]
         
         self.ScoreValue = 1000
-        self.Damage = 100
+        self.Damage = 101
         self.HitsToDie = 1000
         
     def update(self):
         self.rect.left += self.hmove
         self.rect.top += self.vmove
-        if self.rect.left<0: self.kill()
+        if self.rect.left<-self.rect.width: self.kill()

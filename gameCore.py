@@ -11,6 +11,7 @@ clock = pygame.time.Clock()
 from levelGenerator import Levels
 from playerShip import GoodShip, GoodBullet
 from droneShip import DroneShip
+from droneCrate import DroneCrate
 from droneWing import DroneWing, BadBullet
 from droneTower import DroneTower
 from droneSnakehead import DroneSnakeHead
@@ -73,6 +74,7 @@ class Game(object):
         self.TowerImgs = [LoadImg("tower0.png"), LoadImg("tower1.png"), LoadImg("tower2.png") ]
         
         self.SnakeheadImgs = [LoadImg("snake0.png")]
+        self.DroneCrateImgs = [LoadImg("crate.png")]
         
     def SetLevel(self, level):
         self.Step = 0
@@ -86,27 +88,31 @@ class Game(object):
             self.BadGuys.add( DroneShip((640,240), self.DroneShipImgs) )
             self.BadGuys.add( DroneShip((640,140), self.DroneShipImgs) )
             
-        elif self.Step>300  and self.Step<900  and self.Step % 100 == 0:
+            self.BadGuys.add( DroneCrate((640,392), self.DroneCrateImgs) )
+            self.BadGuys.add( DroneCrate((640,360), self.DroneCrateImgs) )
+            self.BadGuys.add( DroneCrate((640,328), self.DroneCrateImgs) )
             
-            dw = DroneWing((640,40), self.DroneWingImgs)
-            self.BadGuys.add( dw )
-            dw.gameCore = self
-            dw.targetvert = self.GoodGuy.rect.midright[0]
+        #elif self.Step>300  and self.Step<900  and self.Step % 100 == 0:
             
-            dw = DroneWing((640,400), self.DroneWingImgs)
-            self.BadGuys.add( dw )
-            dw.targetvert = self.GoodGuy.rect.midright[0]
-            dw.gameCore = self
+            #dw = DroneWing((640,40), self.DroneWingImgs)
+            #self.BadGuys.add( dw )
+            #dw.gameCore = self
+            #dw.targetvert = self.GoodGuy.rect.midright[0]
             
-        elif self.Step>900  and self.Step<1200  and self.Step % 70 == 0:
-            sh = DroneSnakeHead((640,40), self.SnakeheadImgs)
-            self.BadGuys.add(sh)
-            sh.gameCore = self
+            #dw = DroneWing((640,400), self.DroneWingImgs)
+            #self.BadGuys.add( dw )
+            #dw.targetvert = self.GoodGuy.rect.midright[0]
+            #dw.gameCore = self
             
-        elif self.Step>1200  and self.Step<1800  and self.Step % 40 == 0:
-            dt = DroneTower((640,344), self.TowerImgs)
-            self.BadGuys.add( dt )
-            dt.gameCore = self
+        #elif self.Step>900  and self.Step<1200  and self.Step % 70 == 0:
+            #sh = DroneSnakeHead((640,40), self.SnakeheadImgs)
+            #self.BadGuys.add(sh)
+            #sh.gameCore = self
+            
+        #elif self.Step>1200  and self.Step<1800  and self.Step % 40 == 0:
+            #dt = DroneTower((640,344), self.TowerImgs)
+            #self.BadGuys.add( dt )
+            #dt.gameCore = self
     
     def Run(self):
         
@@ -188,23 +194,22 @@ class Game(object):
         self.Surface.blit(scoretext, (20, 370))
         
         scoretext = self.Font.render("Shields : ", 1, fc)
-        self.Surface.blit(scoretext, (20, 445))
+        self.Surface.blit(scoretext, (20, 455))
         
         x = 130
-        y = 450
+        y = 455
         
-        pygame.draw.rect(self.Surface, Color(255,255,255), Rect(x,y,200,20) , 0)
+        pygame.draw.rect(self.Surface, Color(255,255,255), Rect(x,y,100,16) , 0)
         
         if self.Health<25:
             hc = Color(255,0,0)
         else:
-            hc = Color(255,164,46)
+            hc = Color(255,233,127)
         
-        pygame.draw.rect(self.Surface, hc,  Rect(x,y, self.Health*2 ,20) , 0)
-        pygame.draw.rect(self.Surface, Color(255,255,255), Rect(x,y,200,20) , 1)
+        pygame.draw.rect(self.Surface, hc,  Rect(x,y, self.Health, 16) , 0)
+        pygame.draw.rect(self.Surface, Color(255,255,255), Rect(x,y,100, 16) , 1)
         
     def Draw(self):
-        #self.Surface.fill((0, 0, 0))
         
         # Draw Level
         self.Level.Draw(self.Step, self.Surface)

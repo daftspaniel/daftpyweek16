@@ -18,7 +18,7 @@ class DroneCrate(pygame.sprite.Sprite):
         self.rect.left = pos[0]
         
         self.ScoreValue = 1000
-        self.Damage = 101
+        self.Damage = 40
         self.HitsToDie = 1000
         
     def update(self):

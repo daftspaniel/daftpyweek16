@@ -7,16 +7,12 @@ import os
 import random
 clock = pygame.time.Clock()
 
-# Daft
+# Daft Gubbins
 from levelGenerator import Levels
-from playerShip import GoodShip, GoodBullet
-
-from droneWing import DroneWing, BadBullet
-from droneTower import DroneTower
-from droneSnakehead import DroneSnakeHead
+from playerShip import GoodShip
 from animExplosion import Explosion
 from niceThings import ShieldBoost
-
+from bullets import GoodBullet, BadBullet
 
 def LoadImg(filename):
     return pygame.image.load(os.path.join("img", filename))
@@ -27,6 +23,8 @@ class Game(object):
         
         self.Surface = surface
         self.Playing = True
+        self.HoldUp = False
+        self.GameOver = 300
         self.Font = pygame.font.Font("Geo-Regular.ttf",30)
         
         # Player
@@ -124,9 +122,10 @@ class Game(object):
             
             time = clock.tick(60)
             
-            self.Step += 1
-            self.Level.Progress()
-            self.UpdateAll()
+            if self.Health>0 and not self.HoldUp:
+                self.Step += 1
+                self.Level.Progress()
+                self.UpdateAll()
             self.Draw()
             
             self.DetectCollisions()
@@ -154,7 +153,8 @@ class Game(object):
                         vmove = 1
                     if keystate[K_j]==1:
                         self.GoodGuy.fire = 1
-                        
+                    if keystate[K_x]==1:
+                        self.Step += 100
                 elif event.type == pygame.KEYUP:
                     keystate = pygame.key.get_pressed()
 
@@ -166,7 +166,7 @@ class Game(object):
                         vmove = 0
                     if keystate[K_j]==0:
                         self.GoodGuy.fire = 0
-                        
+
             self.GoodGuy.hmove = hmove
             self.GoodGuy.vmove = vmove
             
@@ -176,7 +176,11 @@ class Game(object):
             # Refresh Display
             pygame.display.flip()
             
-            if self.Health<0: self.Playing = False
+            if self.Health<0:
+                self.Level.Text = "GAME OVER"
+                self.GameOver -= 1
+                if self.GameOver<1:
+                    self.Playing = False
             
     def AddBadBullet(self, pos):
         b = BadBullet(pos, self.BadBulletImgs)
@@ -201,7 +205,7 @@ class Game(object):
         x = 130
         y = 455
         
-        pygame.draw.rect(self.Surface, Color(255,255,255), Rect(x,y,100,16) , 0)
+        pygame.draw.rect(self.Surface, Color(255,255,255), Rect(x,y,100,16) , 1)
         
         if self.Health<25:
             hc = Color(255,0,0)
@@ -210,6 +214,11 @@ class Game(object):
         
         pygame.draw.rect(self.Surface, hc,  Rect(x,y, self.Health, 16) , 0)
         pygame.draw.rect(self.Surface, Color(255,255,255), Rect(x,y,100, 16) , 1)
+    
+    def DrawOverLay(self):
+        fc = (5,225,5)
+        scoretext = self.Font.render(self.Level.Text, 1, fc)
+        self.Surface.blit(scoretext, (210, 210))
         
     def Draw(self):
         
@@ -231,6 +240,9 @@ class Game(object):
         
         # Misc
         self.DrawScore()
+        
+        # Overlay Text
+        if self.Level.Text: self.DrawOverLay()
             
     def UpdateAll(self):
         self.PlayerGroup.update()

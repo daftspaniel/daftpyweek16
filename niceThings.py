@@ -22,7 +22,7 @@ class ShieldBoost(pygame.sprite.Sprite):
         
     def update(self):
         self.rect.left += self.hmove
-        if self.rect.left>640 or self.rect.left<0: self.kill()
+        if self.rect.left>740 or self.rect.left<0: self.kill()
         
         self.imgswap += 1
         

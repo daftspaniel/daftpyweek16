@@ -18,7 +18,7 @@ clock = pygame.time.Clock()
 
 def main():
     
-    menu = MenuScreen()
+    menu = MenuScreen(screen)
     
     while True:
         while menu.Active:

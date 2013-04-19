@@ -285,7 +285,7 @@ class Font():
         for font in fonts:
             if font not in cls._fonts:
                 cls._fonts[font] = _Font()
-            cls._fonts[font].replace(cls._create_font(fonts[font], 16))
+            cls._fonts[font].replace(cls._create_font(fonts[font], 30))
 
         if not cls._fonts["widget"]:
             cls._fonts["widget"].replace(cls._create_font("Arial", 16))
@@ -309,7 +309,7 @@ class Font():
 
         """
         font = "Geo-Regular.ttf"
-        size = 20
+        size = 30
         if font[-4:] in (".ttf", ".otf"):
             return pygame.font.Font(font, size)
         else:

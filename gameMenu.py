@@ -7,7 +7,7 @@ import sgc
 from sgc.locals import *
 
 class MenuScreen(object):
-    def __init__(self):
+    def __init__(self, screen):
         self.Active = True
         
         sgc.Menu.startgame = self.startgame
@@ -17,14 +17,22 @@ class MenuScreen(object):
         self.menu = sgc.Menu(menu=open("nemesismenu"))
         self.menu.add()
         self.clock = pygame.time.Clock()
-        
+        self.Screen = screen
+        self.shipimg = pygame.image.load("img/newplayer0.png")
+        self.shippos = (-10, 400)
     def startgame(self):
         self.Active = False
     def exitgame(self):
         exit()
     def Run(self):
         while self.Active:
-            time = self.clock.tick(30)
+            time = self.clock.tick(40)
+            
+            if self.shippos[0]+2>675:
+                self.shippos = (-10, 400)
+            
+            self.shippos = (self.shippos[0]+2, self.shippos[1])
+            
             for event in pygame.event.get():
                 sgc.event(event)
                 if event.type == pygame.KEYDOWN:
@@ -37,4 +45,5 @@ class MenuScreen(object):
                     exit()
             
             sgc.update(time)
+            self.Screen.blit(self.shipimg, self.shippos)
             pygame.display.flip()

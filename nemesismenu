@@ -1,5 +1,5 @@
-["m:Nemesis",
+["m:Drone Onslaught",
     ["f:Start Game","start"],
-    ["m:Instructions",["w:Label", {"text": "Use WASD to move.\nK to fire."}]],
+    ["m:Instructions",["w:Label", {"text": "Use WASD to move.\nJ to fire."}]],
     ["f:Quit", "exit"]
 ]

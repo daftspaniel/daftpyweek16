@@ -46,7 +46,7 @@ class Levels(object):
             self.add_DroneShip( (840,180) )
             self.add_DroneShip( (840,240) )
             
-            for x in range(0,5):
+            for x in range(0,4):
                 m = (32*x)
                 self.add_Crate( (640 + m, 384 - m) )
                 self.add_Crate( (640 + m, 32 + m) )
@@ -117,17 +117,121 @@ class Levels(object):
                 self.add_DroneShip( (1440, 64 + m) )
                 
         elif gc.Step==3000:
-            self.Text = "Super Shooting - Onto Level 2"
+            self.Text = "Super Shooting!"
+        
+        elif gc.Step==3100:
+            self.Text = "Onto Level 2"
             self.Current = 2
         
         elif gc.Step==3200:
-            self.Text = None
             
+            self.Text = None
+            for x in range(1,5):
+                self.add_DroneHomingShip( (540 + (x*100), 20) )
+                
+        elif gc.Step==3600:
+            
+            self.add_CrateHill(4)
+            
+        elif gc.Step==3900:
+            
+            self.add_CrateHill(3)
+        
+        elif gc.Step==4000:
+        
+            for x in range(0,8):
+                m = (32*x)
+                self.add_DroneShip( (640, 64 + m) )
+        
+        elif gc.Step==4300:
+            
+            self.add_DroneTower((670, 344))
+            #self.add_DroneTower((705, 344))
+            
+            self.add_DroneHomingShip( (-40, 0) )
+            self.add_DroneHomingShip( (-140, 400) )
+            #self.add_DroneHomingShip( (740, 0) )
+            #self.add_DroneHomingShip( (740, 400) )
+            
+            self.add_DroneWing( (710, 250) )
+            
+        elif gc.Step==4500:
+            
+            self.add_CrateHill(8)
+            
+        elif gc.Step==5200:
+            
+            self.add_DroneWing( (640, 120) )
+            self.add_DroneWing( (640, 220) )
+            self.add_DroneWing( (640, 320) )
+
+            self.add_DroneWing( (840, 120) )
+            self.add_DroneWing( (840, 220) )
+            self.add_DroneWing( (840, 320) )
+            
+            self.add_DroneWing( (1040, 120) )
+            self.add_DroneWing( (1040, 220) )
+            self.add_DroneWing( (1040, 320) )
+    
+        elif gc.Step==5600:
+            
+            self.add_DroneTower((670, 344))
+            self.add_DroneTower((720, 344))
+            self.add_DroneTower((770, 344))
+            self.add_DroneTower((820, 344))
+            
+        elif gc.Step==6000:
+            self.Text = "50% Shield Boost - Get It!"
+            
+            # Special Bonus
+            droneshield = [(640, 208),(672, 256), (672, 160), (704, 208)]
+            for p in droneshield:
+                ds = self.add_DroneShip(p)
+                ds.hmove = -1
+            sb = self.add_ShieldBoo( (672+4, 208+4) )
+            sb.Health = 50
+            sb.hmove = -1
+        
+        elif gc.Step==6400:
+            self.Text = "Born to zap!"
+        
+        elif gc.Step==6500:
+            self.Text = "Onto Level 3"
+            self.Current = 3
+        
+    def add_CrateHill(self, peak):
+        
+        for x in range(0,peak):
+            m = (32*x)
+            mx = 640 + m
+            my = 384 - m
+            self.add_Crate( (mx, my ) )
+            
+        mx -= 32
+        my -= 32
+        
+        for x in range(0,peak):
+            mx += 32
+            my += 32
+            self.add_Crate( (mx,my) )
+    
+    def add_DroneTower(self, pos):
+        dt = DroneTower(pos, self.GameCore.TowerImgs)
+        self.GameCore.BadGuys.add( dt )
+        dt.gameCore = self.GameCore
+        return dt
+        
     def add_ShieldBoo(self, pos):
         sb = ShieldBoost(pos, self.GameCore.ShieldBoostImgs)
         self.GameCore.Bonuses.add(sb)
         return sb
 
+    def add_DroneHomingShip(self, pos):
+        ds = self.add_DroneWing( pos )
+        ds.targetvert = self.GameCore.GoodGuy.rect.midright[1]
+        self.GameCore.BadGuys.add( ds )
+        return ds
+        
     def add_DroneShip(self, pos):
         ds = DroneShip(pos, self.GameCore.DroneShipImgs)
         self.GameCore.BadGuys.add( ds )

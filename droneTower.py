@@ -19,7 +19,7 @@ class DroneTower(pygame.sprite.Sprite):
         self.ScoreValue = 40
         self.Damage = 50
         self.reload = 0
-        self.HitsToDie = 5
+        self.HitsToDie = 12
         self.firing = False
         
     def update(self):

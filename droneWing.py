@@ -31,11 +31,13 @@ class DroneWing(pygame.sprite.Sprite):
             if self.reload % 40 == 0:
                 b = self.gameCore.AddBadBullet(self.rect.topleft)
         if self.targetvert>-1:
-            if abs(self.targetvert-self.rect.top)>16:
+            if abs(self.targetvert-self.rect.top)>10:
                 if self.targetvert>self.rect.top:
                     self.vmove = 8
                 else:
                     self.vmove = -8
+            else:
+                self.vmove = 0
         else:
             self.vmove = 0
         #print abs(self.targetvert-self.rect.top), self.targetvert, self.vmove, self.rect.top
@@ -44,6 +46,7 @@ class DroneWing(pygame.sprite.Sprite):
         self.rect.top += self.vmove
         if self.rect.left<630:
             self.firing = True
-        if self.rect.left<0 or self.rect.left>666: 
+        if (self.rect.left<0 and self.hmove<0) or (self.rect.left>666 and self.hmove>0): 
             self.hmove *= -1
+            self.targetvert = self.gameCore.GoodGuy.rect.midright[1]
             #self.kill()

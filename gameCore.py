@@ -154,7 +154,8 @@ class Game(object):
                     if keystate[K_j]==1:
                         self.GoodGuy.fire = 1
                     if keystate[K_x]==1:
-                        self.Step += 100
+                        self.Step = 3850
+                        
                 elif event.type == pygame.KEYUP:
                     keystate = pygame.key.get_pressed()
 
@@ -176,7 +177,7 @@ class Game(object):
             # Refresh Display
             pygame.display.flip()
             
-            if self.Health<0:
+            if self.Health<1:
                 self.Level.Text = "GAME OVER"
                 self.GameOver -= 1
                 if self.GameOver<1:
@@ -194,26 +195,28 @@ class Game(object):
     def DrawScore(self):
         
         fc = (5,225,5)
-        scoretext = self.Font.render("Level : " + str(self.LevelID + 1) + " Score : " + str(self.Score), 1,fc)
+        scoretext = self.Font.render("Level : " + str(self.Level.Current) + " Score : " + str(self.Score), 1,fc)
         self.Surface.blit(scoretext, (340, 447))
         scoretext = self.Font.render("Step : " + str(self.Step), 1, fc)
         self.Surface.blit(scoretext, (20, 370))
         
         scoretext = self.Font.render("Shields ", 1, fc)
-        self.Surface.blit(scoretext, (20, 455))
+        self.Surface.blit(scoretext, (20, 450))
         
         x = 130
         y = 455
+        hc = Color(255,0,0)
         
         pygame.draw.rect(self.Surface, Color(255,255,255), Rect(x,y,100,16) , 1)
         
-        if self.Health<25:
-            hc = Color(255,0,0)
-        else:
-            hc = Color(255,233,127)
+        if self.Health>0:
+            if self.Health<25:
+                hc = Color(255,0,0)
+            else:
+                hc = Color(255,233,127)
         
-        pygame.draw.rect(self.Surface, hc,  Rect(x,y, self.Health, 16) , 0)
-        pygame.draw.rect(self.Surface, Color(255,255,255), Rect(x,y,100, 16) , 1)
+            pygame.draw.rect(self.Surface, hc,  Rect(x,y, self.Health, 16) , 0)
+            pygame.draw.rect(self.Surface, Color(255,255,255), Rect(x,y,100, 16) , 1)
     
     def DrawOverLay(self):
         fc = (5,225,5)

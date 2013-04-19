@@ -30,7 +30,7 @@ class GoodShip(pygame.sprite.Sprite):
         self.reload += 1
         
         # Fire!
-        if self.fire and self.reload>4:
+        if self.fire and self.reload>8:
             self.ZapSound.play()
             self.fired = 1
             self.reload = 0

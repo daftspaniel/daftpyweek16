@@ -2,9 +2,12 @@
 import pygame
 from pygame.locals import *
 import pygame.time
+import random
 
 import sgc
 from sgc.locals import *
+
+from animExplosion import Explosion
 
 class MenuScreen(object):
     def __init__(self, screen):
@@ -19,12 +22,21 @@ class MenuScreen(object):
         self.clock = pygame.time.Clock()
         self.Screen = screen
         self.shipimg = pygame.image.load("img/newplayer0.png")
+        self.grndimg = pygame.image.load("img/title.png")
         self.shippos = (-10, 400)
+        self.Explosions = []
+        pygame.mixer.music.load("menu.mp3")
+        
+        
     def startgame(self):
         self.Active = False
+        
     def exitgame(self):
         exit()
+        
     def Run(self):
+        pygame.mixer.music.play(-1)
+        
         while self.Active:
             time = self.clock.tick(40)
             
@@ -32,6 +44,10 @@ class MenuScreen(object):
                 self.shippos = (-10, 400)
             
             self.shippos = (self.shippos[0]+2, self.shippos[1])
+            
+            #if random.randrange(0,15)>10:
+            #    self.Explosions.append(Explosion( (random.randrange(0,639), random.randrange(0,450)), random.randrange(15,65)))
+            #print len(self.Explosions)
             
             for event in pygame.event.get():
                 sgc.event(event)
@@ -44,6 +60,21 @@ class MenuScreen(object):
                 elif event.type == QUIT:
                     exit()
             
+            #self.background = pygame.Surface(self.Screen.get_size())
+            
+            #self.background = self.background.convert()
+            
+            #for e in self.Explosions:
+            #    e.Draw(self.background)
+            
+            #self.Screen.blit(self.background, (0,0))
             sgc.update(time)
+            #for e in self.Explosions:
+            #    e.Update()
+            #self.Explosions = [e for e in self.Explosions if e.Alive]
+            
             self.Screen.blit(self.shipimg, self.shippos)
+            self.Screen.blit(self.grndimg, (0,448))
+            
             pygame.display.flip()
+        pygame.mixer.music.stop()

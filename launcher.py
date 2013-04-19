@@ -24,6 +24,7 @@ def main():
     while True:
         while menu.Active:
             game = Game(screen.image)
+            game.origscr = screen
             menu.Run()
             game.Playing = True
         while game.Playing:

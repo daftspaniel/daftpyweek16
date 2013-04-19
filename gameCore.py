@@ -158,6 +158,8 @@ class Game(object):
                     if keystate[K_x]==1:
                         self.Step = 7350
                         self.Health = 100
+                    if keystate[K_m]==1:
+                        pygame.image.save(self.Surface, "screenshot.jpeg")
                 elif event.type == pygame.KEYUP:
                     keystate = pygame.key.get_pressed()
 

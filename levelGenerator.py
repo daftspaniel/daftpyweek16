@@ -215,21 +215,28 @@ class Levels(object):
             self.add_DroneSnake( (640,230) )
             
     def add_DroneSnake(self, pos):
-        ds = DroneSnakeHead((pos[0], pos[1]), self.GameCore.SnakeheadImgs)
-        ds.gameCore = self.GameCore
-        self.GameCore.BadGuys.add( ds )
+        dsh = DroneSnakeHead((pos[0], pos[1]), self.GameCore.SnakeheadImgs)
+        dsh.gameCore = self.GameCore
+        dsh.CanFire = True
+        self.GameCore.BadGuys.add( dsh )
         
         ds = DroneSnakeHead((pos[0] + 32, pos[1]), self.GameCore.SnakebodyImgs)
         ds.gameCore = self.GameCore
+        ds.hlimit += 32
         self.GameCore.BadGuys.add( ds )
+        dsh.Tail.append(ds)
         
         ds = DroneSnakeHead((pos[0] + 64, pos[1]), self.GameCore.SnakebodyImgs)
         ds.gameCore = self.GameCore
+        ds.hlimit += 64
         self.GameCore.BadGuys.add( ds )
+        dsh.Tail.append(ds)
         
         ds = DroneSnakeHead((pos[0] + 96, pos[1]), self.GameCore.SnaketailImgs)
         ds.gameCore = self.GameCore
+        ds.hlimit += 96
         self.GameCore.BadGuys.add( ds )
+        dsh.Tail.append(ds)
         
     def add_CrateHill(self, peak):
         

@@ -157,7 +157,7 @@ class Game(object):
                         self.GoodGuy.fire = 1
                     if keystate[K_x]==1:
                         self.Step = 7350
-                        
+                        self.Health = 100
                 elif event.type == pygame.KEYUP:
                     keystate = pygame.key.get_pressed()
 
@@ -197,8 +197,8 @@ class Game(object):
     def DrawScore(self):
         
         fc = (5,225,5)
-        scoretext = self.Font.render("Level : " + str(self.Level.Current) + " Score : " + str(self.Score), 1,fc)
-        self.Surface.blit(scoretext, (340, 447))
+        scoretext = self.Font.render("Level : " + str(self.Level.Current) + "   Score : " + str(self.Score), 1,fc)
+        self.Surface.blit(scoretext, (310, 447))
         scoretext = self.Font.render("Step : " + str(self.Step), 1, fc)
         self.Surface.blit(scoretext, (20, 370))
         
@@ -269,6 +269,17 @@ class Game(object):
             
             if badguy.HitsToDie < 1:
                 self.Explosions.append(Explosion(badguy.rect.midleft, badguy.rect.w))
+                if badguy.Name == "SnakeHead":
+                    poi = [badguy]
+                    poi.extend(badguy.Tail)
+                    for seg in poi:
+                        self.Explosions.append(Explosion(seg.rect.midleft, seg.rect.w))
+                        
+                        sb = ShieldBoost(seg.rect.center, self.ShieldBoostImgs)
+                        sb.Health = 10
+                        self.Bonuses.add(sb)
+                        seg.kill()
+                        
                 badguy.kill()
                 self.ExpSound.play()
                 self.Score += badguy.ScoreValue
@@ -295,6 +306,7 @@ class Game(object):
             self.Explosions.append(Explosion(badguy.rect.midleft, badguy.rect.w))
             badguy.kill()
             self.ExpSound.play()
+            self.HurtSound.play()
             self.Health -= badguy.Damage
 
         # Player Bonus Collect

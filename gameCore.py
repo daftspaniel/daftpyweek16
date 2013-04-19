@@ -72,6 +72,8 @@ class Game(object):
         self.TowerImgs = [LoadImg("tower0.png"), LoadImg("tower1.png"), LoadImg("tower2.png") ]
         
         self.SnakeheadImgs = [LoadImg("snake0.png")]
+        self.SnakebodyImgs = [LoadImg("snake1.png")]
+        self.SnaketailImgs = [LoadImg("snake2.png")]
         self.DroneCrateImgs = [LoadImg("crate.png")]
         
     def SetLevel(self, level):
@@ -154,7 +156,7 @@ class Game(object):
                     if keystate[K_j]==1:
                         self.GoodGuy.fire = 1
                     if keystate[K_x]==1:
-                        self.Step = 3850
+                        self.Step = 7350
                         
                 elif event.type == pygame.KEYUP:
                     keystate = pygame.key.get_pressed()
@@ -171,7 +173,7 @@ class Game(object):
             self.GoodGuy.hmove = hmove
             self.GoodGuy.vmove = vmove
             
-            if self.GoodGuy.fire and self.GoodGuy.fired and len(self.GoodBullets)<10 :
+            if self.GoodGuy.fire and self.GoodGuy.fired and len(self.GoodBullets)<9 :
                 self.AddGoodBullet()
                 
             # Refresh Display

@@ -13,7 +13,7 @@ from starField import starField
 class Levels(object):
     def __init__(self, ID):
         self.Levels = []
-        self.Borders = [pygame.image.load("img/grille.png"), pygame.image.load("img/lava.png")]
+        self.Borders = [pygame.image.load("img/grille.png"), pygame.image.load("img/lava.png"), pygame.image.load("img/iceb.png") ]
         self.Current = ID
         self.Stars = [starField( (0,32), (640,408), 18, 1 ), 
                       starField( (0,32), (640,408), 8, 2 ),
@@ -199,6 +199,38 @@ class Levels(object):
             self.Text = "Onto Level 3"
             self.Current = 3
         
+        elif gc.Step==6600:
+            self.Text = None
+            
+            for x in range(0,10):
+                m = (32*x)
+                self.add_Crate( (640, 64 + m) )
+            
+            for x in range(0,10):
+                m = (32*x)
+                self.add_Crate( (1040, 64 + m) )
+            
+        elif gc.Step==7500:
+            
+            self.add_DroneSnake( (640,230) )
+            
+    def add_DroneSnake(self, pos):
+        ds = DroneSnakeHead((pos[0], pos[1]), self.GameCore.SnakeheadImgs)
+        ds.gameCore = self.GameCore
+        self.GameCore.BadGuys.add( ds )
+        
+        ds = DroneSnakeHead((pos[0] + 32, pos[1]), self.GameCore.SnakebodyImgs)
+        ds.gameCore = self.GameCore
+        self.GameCore.BadGuys.add( ds )
+        
+        ds = DroneSnakeHead((pos[0] + 64, pos[1]), self.GameCore.SnakebodyImgs)
+        ds.gameCore = self.GameCore
+        self.GameCore.BadGuys.add( ds )
+        
+        ds = DroneSnakeHead((pos[0] + 96, pos[1]), self.GameCore.SnaketailImgs)
+        ds.gameCore = self.GameCore
+        self.GameCore.BadGuys.add( ds )
+        
     def add_CrateHill(self, peak):
         
         for x in range(0,peak):
@@ -256,6 +288,11 @@ class Levels(object):
         if step>3000:
             self.ActiveBorder = 0
             self.rendback = None
+        
+        if step>6500:
+            self.ActiveBorder = 2
+            self.rendback = None
+        
         r = self.Borders[0].get_rect()
         bwidth = r.width
         bheight = r.height

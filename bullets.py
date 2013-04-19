@@ -19,7 +19,7 @@ class BadBullet(pygame.sprite.Sprite):
     def update(self):
         self.rect.left += self.hmove
         self.rect.top += self.vmove
-        if self.rect.left>640: self.kill()
+        if self.rect.left>640 or self.rect.left<0: self.kill()
 
 class GoodBullet(pygame.sprite.Sprite):
     
@@ -38,4 +38,4 @@ class GoodBullet(pygame.sprite.Sprite):
     def update(self):
         self.rect.left += self.hmove
         self.rect.top += self.vmove
-        if self.rect.left>631: self.kill()
+        if self.rect.left>631 or self.rect.left<0: self.kill()

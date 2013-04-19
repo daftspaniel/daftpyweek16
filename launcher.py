@@ -15,6 +15,7 @@ pygame.display.init()
 pygame.mixer.init()
 screen = sgc.surface.Screen((640, 480), DOUBLEBUF)
 clock = pygame.time.Clock()
+pygame.display.set_caption("Drone Onslaught")
 
 def main():
     

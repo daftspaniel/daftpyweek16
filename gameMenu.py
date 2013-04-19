@@ -25,6 +25,7 @@ class MenuScreen(object):
         self.grndimg = pygame.image.load("img/title.png")
         self.shippos = (-10, 400)
         self.Explosions = []
+        self.FullScreen = False
         pygame.mixer.music.load("menu.mp3")
         
         
@@ -55,6 +56,12 @@ class MenuScreen(object):
                     keystate = pygame.key.get_pressed()
                     if keystate[K_j]==1:
                         self.startgame()
+                    elif keystate[K_F11]==1:
+                        self.FullScreen = not self.FullScreen
+                        if self.FullScreen:
+                            window = pygame.display.set_mode(self.ScreenSize, FULLSCREEN)
+                        else:
+                            window = pygame.display.set_mode(self.ScreenSize)
                 if event.type == GUI:
                     pass
                 elif event.type == QUIT:

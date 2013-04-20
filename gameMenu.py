@@ -23,6 +23,8 @@ class MenuScreen(object):
         self.Screen = screen
         self.shipimg = pygame.image.load("img/newplayer0.png")
         self.grndimg = pygame.image.load("img/title.png")
+        self.helpimgs = [pygame.image.load("img/mst4.png"),pygame.image.load("img/mst0.png"),pygame.image.load("img/mst1.png"),pygame.image.load("img/mst2.png"),pygame.image.load("img/mst3.png")]
+        self.helpidx = 0
         self.shippos = (-10, 400)
         self.Explosions = []
         self.FullScreen = False
@@ -41,9 +43,10 @@ class MenuScreen(object):
         while self.Active:
             time = self.clock.tick(40)
             
-            if self.shippos[0]+2>675:
+            if self.shippos[0]+2>735:
                 self.shippos = (-10, 400)
-            
+                self.helpidx += 1
+                if self.helpidx==len(self.helpimgs): self.helpidx = 0
             self.shippos = (self.shippos[0]+2, self.shippos[1])
             
             #if random.randrange(0,15)>10:
@@ -56,6 +59,8 @@ class MenuScreen(object):
                     keystate = pygame.key.get_pressed()
                     if keystate[K_j]==1:
                         self.startgame()
+                    if keystate[K_q]==1:
+                        self.exitgame()
                     elif keystate[K_F11]==1:
                         self.FullScreen = not self.FullScreen
                         if self.FullScreen:
@@ -81,6 +86,7 @@ class MenuScreen(object):
             #self.Explosions = [e for e in self.Explosions if e.Alive]
             
             self.Screen.blit(self.shipimg, self.shippos)
+            self.Screen.blit(self.helpimgs[self.helpidx], (self.shippos[0]-193, self.shippos[1]) )
             self.Screen.blit(self.grndimg, (0,448))
             
             pygame.display.flip()

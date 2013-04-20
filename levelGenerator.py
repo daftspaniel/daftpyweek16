@@ -85,7 +85,7 @@ class Levels(object):
             self.add_DroneWing( (640, 388) )
         
         elif gc.Step==2000:
-            self.AddShieldBoost()
+            self.add_ShieldBoost()
             
         elif gc.Step==2100:
             self.Text = None
@@ -174,7 +174,7 @@ class Levels(object):
             
         elif gc.Step==6000:
             
-            self.AddShieldBoost()
+            self.add_ShieldBoost()
             
         elif gc.Step==6100:
             

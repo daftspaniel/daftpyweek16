@@ -145,7 +145,7 @@ class Game(object):
                     exit()
                 elif event.type == KEYDOWN:
                     
-                    if event.key == K_q:
+                    if event.key == K_F12:
                         self.Playing = False
                         return
                     

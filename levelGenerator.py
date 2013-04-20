@@ -7,6 +7,8 @@ from droneWing import DroneWing
 from droneWalker import DroneWalker
 from droneTower import DroneTower
 from droneSnakehead import DroneSnakeHead
+from droneDisc import DroneDisc
+from droneBoss import DroneBoss
 
 from niceThings import ShieldBoost
 from starField import starField
@@ -14,8 +16,12 @@ from starField import starField
 class Levels(object):
     def __init__(self, ID):
         self.Levels = []
-        self.Borders = [pygame.image.load("img/grille.png"), pygame.image.load("img/lava.png"), pygame.image.load("img/iceb.png") ]
-        self.Current = ID
+        self.Borders = [pygame.image.load("img/grille.png"),
+                        pygame.image.load("img/lava.png"),
+                        pygame.image.load("img/iceb.png"),
+                        pygame.image.load("img/marmalade.png"),
+                        pygame.image.load("img/endzone.png")]
+        self.Current = 1
         self.Stars = [starField( (0,32), (640,408), 18, 1 ), 
                       starField( (0,32), (640,408), 8, 2 ),
                       starField( (0,32), (640,408), 6, 3 )]
@@ -268,13 +274,89 @@ class Levels(object):
             self.Current = 4
             
         elif gc.Step==10400:
-            self.Text = None
-            self.add_ShieldBoost()
             
+            self.add_ShieldBoost()
+
+        elif gc.Step==10500:
+
+            self.Text = None
+            
+        elif gc.Step==10700:
+            
+            for x in range(0,11):
+                m = (32*x)
+                self.add_Crate( (640, 32 + m) )
+            
+            for x in range(0,11):
+                m = (32*x)
+                self.add_Crate( (940, 64 + m) )
+
+            for x in range(0,11):
+                m = (32*x)
+                self.add_Crate( (1240, 32 + m) )
+            
+            w = self.add_FlippedWalker( (764, 32) )
+            w.hmove = -1
+            
+            w = self.add_DroneWalker( (1064, 384) )
+            w.firing = True
+            w.hmove = -1
+            
+        elif gc.Step==11800:
+            
+            self.add_DroneTower( (670, 344) )
+            self.add_DroneTower( (735, 344) )
+            
+            self.add_DroneHomingShip( (600, 500) )
+            self.add_DroneHomingShip( (500, 500) )
+            self.add_DroneHomingShip( (740, 0) )
+            self.add_DroneHomingShip( (840, 400) )
+            
+            self.add_DroneWing( (710, 250) )
+            self.add_DroneWing( (742, 250) )
+            
+        elif gc.Step==12300:
+            
+            self.add_DroneSnake( (640,230) )
+            
+            self.add_DroneSnake( (940,230) )
+            
+        elif gc.Step==12900:
+            
+            self.add_DroneDisc( (640, 416) )
+            self.add_DroneDisc( (740, 316) )
+            self.add_DroneDisc( (840, 216) )
+            self.add_DroneDisc( (940, 116) )
+            self.add_DroneDisc( (1040, 16) )
+        
+        elif gc.Step==13100:
+            
+            self.add_CrateHill(5)
+            
+            self.add_CrateUpHill(5)
+            
+        elif gc.Step==13300:
+            
+            self.Text = "Meet Your Nemesis"
+            self.Current = 5
+            
+        elif gc.Step==13500:
+            
+            self.Text = None
+            ds = DroneBoss( (640, 240), self.GameCore.BossImgs)
+            ds.gameCore = self.GameCore
+            
+            self.GameCore.BadGuys.add( ds )
+            
+        elif gc.Step>13500:
+            if self.GameCore.BossKilled:
+                self.Text = "Well Done - Drones Defeated!"
+                
     def add_FlippedWalker(self, pos):
         d = self.add_DroneWalker( pos )
         d.firing = True
         d.Flip()
+        return d
         
     def add_DroneSnake(self, pos):
         dsh = DroneSnakeHead((pos[0], pos[1]), self.GameCore.SnakeheadImgs)
@@ -367,6 +449,11 @@ class Levels(object):
         self.GameCore.BadGuys.add( ds )
         return ds
         
+    def add_DroneDisc(self, pos):
+        ds = DroneDisc(pos, self.GameCore.DiscShipImgs)
+        self.GameCore.BadGuys.add( ds )
+        return ds
+        
     def add_DroneWalker(self, pos):
         ds = DroneWalker(pos, self.GameCore.DroneWalkerImgs)
         self.GameCore.BadGuys.add( ds )
@@ -396,7 +483,15 @@ class Levels(object):
         if step>6500:
             self.ActiveBorder = 2
             self.rendback = None
-        
+       
+        if step>10300:
+            self.ActiveBorder = 3
+            self.rendback = None
+            
+        if step>13000:
+            self.ActiveBorder = 4
+            self.rendback = None
+            
         r = self.Borders[0].get_rect()
         bwidth = r.width
         bheight = r.height

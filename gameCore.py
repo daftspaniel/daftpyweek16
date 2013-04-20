@@ -26,6 +26,7 @@ class Game(object):
         self.HoldUp = False
         self.GameOver = 300
         self.Font = pygame.font.Font("Geo-Regular.ttf",30)
+        self.BossKilled = False
         
         # Player
         self.GoodGuy = GoodShip(self, (0,300))
@@ -51,6 +52,7 @@ class Game(object):
         self.ExpSound = pygame.mixer.Sound("exp.wav")
         self.BonusSound = pygame.mixer.Sound("bonus.wav")
         self.HurtSound = pygame.mixer.Sound("hurt.wav")
+        self.GameOverSound = pygame.mixer.Sound("gameover.wav")
         
         self.LoadGFX()
         
@@ -82,6 +84,9 @@ class Game(object):
         sub.reverse()
         self.DroneWalkerImgs.extend(sub)
         #print self.DroneWalkerImgs
+        
+        self.DiscShipImgs = [LoadImg("disc0.png")]
+        self.BossImgs = [LoadImg("boss.png")]
         
     def SetLevel(self, level):
         self.Step = 0
@@ -143,6 +148,7 @@ class Game(object):
             for event in pygame.event.get():
                 if event.type == QUIT:
                     exit()
+                    
                 elif event.type == KEYDOWN:
                     
                     if event.key == K_F12:
@@ -162,13 +168,14 @@ class Game(object):
                         vmove = 1
                     if keystate[K_j]==1:
                         self.GoodGuy.fire = 1
-                    if keystate[K_x]==1:
-                        self.Step = 8999
+                    if keystate[K_x]==1:#TODO disable cheat!
+                        self.Step = 13100
                         self.Health = 100
-                    if keystate[K_c]==1:
+                    if keystate[K_c]==1:#TODO disable cheat!
                         self.Health = 100
                     if keystate[K_m]==1:
                         pygame.image.save(self.Surface, "screenshot.jpeg")
+                        
                 elif event.type == pygame.KEYUP:
                     keystate = pygame.key.get_pressed()
 
@@ -191,8 +198,12 @@ class Game(object):
             pygame.display.flip()
             
             if self.Health<1:
-                self.Level.Text = "GAME OVER"
+                if (self.GameOver % 30==0):
+                    self.Level.Text = "G A M E  O V E R"
+                if (self.GameOver % 40==0):
+                    self.Level.Text = "GAME OVER"
                 self.GameOver -= 1
+                if self.GameOver==299: self.GameOverSound.play()
                 if self.GameOver<1:
                     self.Playing = False
             
@@ -210,8 +221,10 @@ class Game(object):
         fc = (5,225,5)
         scoretext = self.Font.render("Level : " + str(self.Level.Current) + "         Score : " + str(self.Score), 1,fc)
         self.Surface.blit(scoretext, (280, 447))
-        scoretext = self.Font.render("Step : " + str(self.Step), 1, fc)
-        self.Surface.blit(scoretext, (20, 370))
+        
+        #TODO: Disable DEBUG
+        #scoretext = self.Font.render("Step : " + str(self.Step), 1, fc)
+        #self.Surface.blit(scoretext, (20, 370))
         
         scoretext = self.Font.render("Shields ", 1, fc)
         self.Surface.blit(scoretext, (20, 450))
@@ -280,6 +293,9 @@ class Game(object):
             
             if badguy.HitsToDie < 1:
                 self.Explosions.append(Explosion(badguy.rect.midleft, badguy.rect.w))
+                if badguy.Name == "Boss":
+                    self.BossKilled = True
+                    pygame.mixer.music.play(-1)
                 if badguy.Name == "SnakeHead":
                     poi = [badguy]
                     poi.extend(badguy.Tail)
@@ -293,6 +309,7 @@ class Game(object):
                         
                 badguy.kill()
                 self.ExpSound.play()
+                
                 self.Score += badguy.ScoreValue
                 
                 if random.randrange(0,5) == 3:

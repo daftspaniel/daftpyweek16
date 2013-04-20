@@ -1,5 +1,5 @@
 ["m:Drone Onslaught",
     ["f:Start Game","start"],
-    ["m:Instructions",["w:Label", {"text": "Use WASD to move.\nJ to fire.\n\nSome drones need hit more than once!"}]],
+    ["m:Instructions",["w:Label", {"text": "Use WASD to move.\nJ to fire.\n\nF12 to quit\n\nSome drones need hit more than once!"}]],
     ["f:Quit", "exit"]
 ]

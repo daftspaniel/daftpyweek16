@@ -4,6 +4,7 @@ from pygame.locals import *
 from droneShip import DroneShip
 from droneCrate import DroneCrate
 from droneWing import DroneWing
+from droneWalker import DroneWalker
 from droneTower import DroneTower
 from droneSnakehead import DroneSnakeHead
 
@@ -213,6 +214,36 @@ class Levels(object):
         elif gc.Step==7500:
             
             self.add_DroneSnake( (640,230) )
+            self.add_CrateUpHill(4)
+            
+        elif gc.Step==8000:
+            
+            self.add_DroneWalker( (640,384) )
+            self.add_DroneWalker( (840,384) )
+            self.add_DroneWalker( (1040,384) )
+            self.add_DroneWalker( (1240,384) )
+        
+        elif gc.Step==8300:
+            
+            self.add_CrateHill(4)
+            
+            self.add_CrateUpHill(4)
+        
+            self.add_DroneWing( (640, 120) )
+            self.add_DroneWing( (640, 220) )
+            self.add_DroneWing( (640, 320) )
+
+        elif gc.Step==8500:
+            
+            self.add_CrateHill(9)
+            
+            self.add_DroneWing( (640, 120) )
+            self.add_DroneWing( (640, 220) )
+            self.add_DroneWing( (640, 320) )
+            
+        elif gc.Step==8900:
+            
+            self.add_CrateUpHill(9)
             
     def add_DroneSnake(self, pos):
         dsh = DroneSnakeHead((pos[0], pos[1]), self.GameCore.SnakeheadImgs)
@@ -253,6 +284,22 @@ class Levels(object):
             mx += 32
             my += 32
             self.add_Crate( (mx,my) )
+        
+    def add_CrateUpHill(self, peak):
+        
+        for x in range(0,peak):
+            m = (32*x)
+            mx = 640 + m
+            my = 384 - m
+            self.add_Crate( (mx, 416- my ) )
+            
+        mx -= 32
+        my -= 32
+        
+        for x in range(0,peak):
+            mx += 32
+            my += 32
+            self.add_Crate( (mx,416-  my) )
     
     def add_DroneTower(self, pos):
         dt = DroneTower(pos, self.GameCore.TowerImgs)
@@ -273,6 +320,11 @@ class Levels(object):
         
     def add_DroneShip(self, pos):
         ds = DroneShip(pos, self.GameCore.DroneShipImgs)
+        self.GameCore.BadGuys.add( ds )
+        return ds
+        
+    def add_DroneWalker(self, pos):
+        ds = DroneWalker(pos, self.GameCore.DroneWalkerImgs)
         self.GameCore.BadGuys.add( ds )
         return ds
         

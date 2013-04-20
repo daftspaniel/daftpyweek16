@@ -20,7 +20,7 @@ class DroneSnakeHead(pygame.sprite.Sprite):
         
         self.ScoreValue = 200
         self.Damage = 102
-        self.HitsToDie = 5
+        self.HitsToDie = 10
         self.reload = 0
         self.firing = False
         self.targetvert = -1

@@ -39,6 +39,9 @@ class DroneWing(pygame.sprite.Sprite):
                     self.vmove = -8
             else:
                 self.vmove = 0
+            if (self.rect.left<0 and self.hmove<0) or (self.rect.left>666 and self.hmove>0): 
+                self.hmove *= -1
+                self.Retarget()
         else:
             self.vmove = 0
         #print abs(self.targetvert-self.rect.top), self.targetvert, self.vmove, self.rect.top
@@ -47,9 +50,6 @@ class DroneWing(pygame.sprite.Sprite):
         self.rect.top += self.vmove
         if self.rect.left<630:
             self.firing = True
-        if (self.rect.left<0 and self.hmove<0) or (self.rect.left>666 and self.hmove>0): 
-            self.hmove *= -1
-            self.Retarget()
             #self.kill()
     def Retarget(self):
         self.targetvert = self.gameCore.GoodGuy.rect.midright[1]

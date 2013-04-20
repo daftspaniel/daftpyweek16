@@ -76,6 +76,13 @@ class Game(object):
         self.SnaketailImgs = [LoadImg("snake2.png")]
         self.DroneCrateImgs = [LoadImg("crate.png")]
         
+        self.DroneWalkerImgs = [LoadImg("walk1.png"), LoadImg("walk2.png"),LoadImg("walk3.png"), LoadImg("walk4.png"), LoadImg("walk5.png")]
+        sub = self.DroneWalkerImgs[:4]
+        #print sub
+        sub.reverse()
+        self.DroneWalkerImgs.extend(sub)
+        #print self.DroneWalkerImgs
+        
     def SetLevel(self, level):
         self.Step = 0
         self.LevelID = level
@@ -156,7 +163,7 @@ class Game(object):
                     if keystate[K_j]==1:
                         self.GoodGuy.fire = 1
                     if keystate[K_x]==1:
-                        self.Step = 7350
+                        self.Step = 7999
                         self.Health = 100
                     if keystate[K_m]==1:
                         pygame.image.save(self.Surface, "screenshot.jpeg")
@@ -199,8 +206,8 @@ class Game(object):
     def DrawScore(self):
         
         fc = (5,225,5)
-        scoretext = self.Font.render("Level : " + str(self.Level.Current) + "   Score : " + str(self.Score), 1,fc)
-        self.Surface.blit(scoretext, (310, 447))
+        scoretext = self.Font.render("Level : " + str(self.Level.Current) + "         Score : " + str(self.Score), 1,fc)
+        self.Surface.blit(scoretext, (280, 447))
         scoretext = self.Font.render("Step : " + str(self.Step), 1, fc)
         self.Surface.blit(scoretext, (20, 370))
         

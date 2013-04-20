@@ -168,10 +168,10 @@ class Game(object):
                         vmove = 1
                     if keystate[K_j]==1:
                         self.GoodGuy.fire = 1
-                    if keystate[K_x]==1:#TODO disable cheat!
+                    if False and keystate[K_x]==1:#TODO disable cheat!
                         self.Step = 13100
                         self.Health = 100
-                    if keystate[K_c]==1:#TODO disable cheat!
+                    if False and keystate[K_c]==1:#TODO disable cheat!
                         self.Health = 100
                     if keystate[K_m]==1:
                         pygame.image.save(self.Surface, "screenshot.jpeg")

@@ -85,16 +85,7 @@ class Levels(object):
             self.add_DroneWing( (640, 388) )
         
         elif gc.Step==2000:
-            self.Text = "50% Shield Boost - Get It!"
-            
-            # Special Bonus
-            droneshield = [(640, 208),(672, 256), (672, 160), (704, 208)]
-            for p in droneshield:
-                ds = self.add_DroneShip(p)
-                ds.hmove = -1
-            sb = self.add_ShieldBoo( (672+4, 208+4) )
-            sb.Health = 50
-            sb.hmove = -1
+            self.AddShieldBoost()
             
         elif gc.Step==2100:
             self.Text = None
@@ -182,19 +173,15 @@ class Levels(object):
             self.add_DroneTower((820, 344))
             
         elif gc.Step==6000:
-            self.Text = "50% Shield Boost - Get It!"
             
-            # Special Bonus
-            droneshield = [(640, 208),(672, 256), (672, 160), (704, 208)]
-            for p in droneshield:
-                ds = self.add_DroneShip(p)
-                ds.hmove = -1
-            sb = self.add_ShieldBoo( (672+4, 208+4) )
-            sb.Health = 50
-            sb.hmove = -1
-        
+            self.AddShieldBoost()
+            
+        elif gc.Step==6100:
+            
+            self.Text = None
+            
         elif gc.Step==6400:
-            self.Text = "Born to zap!"
+            self.Text = "Born To Zap!"
         
         elif gc.Step==6500:
             self.Text = "Onto Level 3"
@@ -245,6 +232,50 @@ class Levels(object):
             
             self.add_CrateUpHill(9)
             
+            self.add_DroneWing( (640, 120) )
+            self.add_DroneWing( (640, 220) )
+            self.add_DroneWing( (640, 320) )
+            
+            d = self.add_DroneWalker( (640,384) )
+            d.firing = True
+            d = self.add_DroneWalker( (840,384) )
+            d.firing = True
+            
+        elif gc.Step==9400:
+            
+            self.add_DroneShip( (640, 348) )
+            self.add_DroneShip( (740, 348) )
+            self.add_DroneShip( (840, 348) )
+        
+        elif gc.Step==9700:
+            
+            self.add_FlippedWalker((840,32))
+            self.add_FlippedWalker((1040,32))
+            
+            self.add_ShieldBoo( (640, 208) )
+            
+            #self.add_DroneTower((670, 344))
+            self.add_DroneTower((720, 344))
+            self.add_DroneTower((870, 344))
+            
+            self.add_DroneSnake( (640,230) )
+            
+        elif gc.Step==10200:
+            self.Text = "The Drones Are Getting Scared!"
+        
+        elif gc.Step==10300:
+            self.Text = "Onto Level 4"
+            self.Current = 4
+            
+        elif gc.Step==10400:
+            self.Text = None
+            self.add_ShieldBoost()
+            
+    def add_FlippedWalker(self, pos):
+        d = self.add_DroneWalker( pos )
+        d.firing = True
+        d.Flip()
+        
     def add_DroneSnake(self, pos):
         dsh = DroneSnakeHead((pos[0], pos[1]), self.GameCore.SnakeheadImgs)
         dsh.gameCore = self.GameCore
@@ -269,6 +300,19 @@ class Levels(object):
         self.GameCore.BadGuys.add( ds )
         dsh.Tail.append(ds)
         
+    def add_ShieldBoost(self):
+        
+            self.Text = "50% Shield Boost - Get It!"
+            
+            # Special Bonus
+            droneshield = [(640, 208),(672, 256), (672, 160), (704, 208)]
+            for p in droneshield:
+                ds = self.add_DroneShip(p)
+                ds.hmove = -1
+            sb = self.add_ShieldBoo( (672+4, 208+4) )
+            sb.Health = 50
+            sb.hmove = -1
+            
     def add_CrateHill(self, peak):
         
         for x in range(0,peak):
@@ -326,6 +370,7 @@ class Levels(object):
     def add_DroneWalker(self, pos):
         ds = DroneWalker(pos, self.GameCore.DroneWalkerImgs)
         self.GameCore.BadGuys.add( ds )
+        ds.gameCore = self.GameCore
         return ds
         
     def add_DroneWing(self, pos):

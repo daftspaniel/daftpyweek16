@@ -25,15 +25,23 @@ class DroneWalker(pygame.sprite.Sprite):
         
         self.reload = 0
         self.firing = False
+        self.bulletvmove = -2
+        
+    def Flip(self):
+        n =[]
+        for img in self.shipimgs:
+            n.append(pygame.transform.flip(img, False, True))
+        self.shipimgs = n
+        self.bulletvmove = 2
         
     def update(self):
         
         if self.firing:
             self.reload += 1
-            if self.reload % 40 == 0:
-                b = self.gameCore.AddBadBullet(self.rect.topleft)
-                b.hmove = 0
-                b.vmove = -2
+            if self.reload % 30 == 0:
+                b = self.gameCore.AddBadBullet(self.rect.midtop)
+                b.hmove = random.randint(-1, 1) * self.hmove
+                b.vmove = self.bulletvmove
                 
         self.rect.left += self.hmove
         self.rect.top += self.vmove

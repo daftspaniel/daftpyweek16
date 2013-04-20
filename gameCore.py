@@ -163,7 +163,9 @@ class Game(object):
                     if keystate[K_j]==1:
                         self.GoodGuy.fire = 1
                     if keystate[K_x]==1:
-                        self.Step = 7999
+                        self.Step = 8999
+                        self.Health = 100
+                    if keystate[K_c]==1:
                         self.Health = 100
                     if keystate[K_m]==1:
                         pygame.image.save(self.Surface, "screenshot.jpeg")

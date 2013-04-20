@@ -30,7 +30,7 @@ class DroneWing(pygame.sprite.Sprite):
             self.reload += 1
             if self.reload % 40 == 0:
                 b = self.gameCore.AddBadBullet(self.rect.topleft)
-                self.Retarget()
+                if self.targetvert>-1:self.Retarget()
         if self.targetvert>-1:
             if abs(self.targetvert-self.rect.top)>10:
                 if self.targetvert>self.rect.top:

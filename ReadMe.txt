@@ -9,12 +9,17 @@
 
 -------------------------------------------------------------------
 
+    Version 0.1
+
     Requires:
         Python 2.7.3
-    To run:
         PyGame 1.9.1
         
-    Tested on Lubuntu linux only.
+    To run:
+        cd to the folder.
+        python launcher.py
+        
+    Tested on Lubuntu Linux only.
 
 -------------------------------------------------------------------
 
@@ -26,7 +31,8 @@
     m to save an in-game screenshot.
     F11 on menu screen to go full screen
     F12 to quit game
-    Some drones need hit more than once!
+    
+    Tip:Some drones need hit more than once!
 
 -------------------------------------------------------------------
 
